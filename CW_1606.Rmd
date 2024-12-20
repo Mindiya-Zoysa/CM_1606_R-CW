@@ -1,0 +1,408 @@
+---
+title: "CW_1606"
+author: "Mindiya De Zoysa"
+date: "2024-04-06"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+##Question 1:
+###(a)
+```{r}
+bag1 <- c(rep(5, 5), rep(10, 3))
+bag2 <- c(rep(15, 2), rep(20, 4))
+
+draw1 <- sample(bag1, 1)
+draw2 <- sample(bag2, 1)
+
+sum <- draw1 + draw2
+
+print(paste("Possible values of X:", sum))
+```
+
+##(b)
+```{r}
+bag1 <- c(rep(5, 5), rep(10, 3))
+bag2 <- c(rep(15, 2), rep(20, 4))
+
+sums <- vector()
+
+for (ball1 in bag1) {
+  for (ball2 in bag2) {
+    sum <- ball1 + ball2
+    sums <- c(sums, sum)
+  }
+}
+
+freq_table <- table(sums)
+
+total_outcomes <- length(bag1) * length(bag2)
+
+pmf <- freq_table / total_outcomes
+
+print("Value of X | Probability")
+for (i in 1:length(pmf)) {
+  print(paste(names(pmf)[i], "|", pmf[i]))
+}
+```
+
+##(c)
+```{r}
+values <- c(20, 25, 30)
+probabilities <- c(5/24, 13/24, 1/4)
+
+expected_value <- sum(values * probabilities)
+cat("Expected Value (E(X)):", expected_value, "\n")
+
+expected_value_squared <- sum((values^2) * probabilities)
+
+variance <- expected_value_squared - expected_value^2
+cat("Variance (Var(X)):", variance, "\n")
+```
+
+##(d)
+```{r}
+X_values <- c(20, 25, 30)
+X_probabilities <- c(5/24, 13/24, 1/4)
+
+Y_values <- (2 * X_values) - 3
+
+data <- data.frame(X = X_values, Y = Y_values, Probability = X_probabilities)
+
+print(data)
+```
+
+##(e)
+```{r}
+prob_X <- c(5/24, 13/24, 1/4)
+
+X_values <- c(20, 25, 30)
+
+Y_values <- (2*X_values) - 3
+
+pmf_Y <- prob_X
+
+cdf_Y <- cumsum(pmf_Y)
+
+cat("\nCDF of Y:\n")
+for (i in 1:length(Y_values)) {
+  cat("Y <", Y_values[i], "with probability", cdf_Y[i], "\n")
+}
+cat("Y <", Y_values[length(Y_values)], "with probability 1\n")
+```
+
+##(f)
+```{r}
+Y_values <- c(37, 47, 57)
+
+cdf_Y <- c(5/24, 18/24, 1)
+
+index_Y_37 <- which(Y_values == 37)
+
+P_Y_37 <- cdf_Y[index_Y_37] - ifelse(index_Y_37 > 1, cdf_Y[index_Y_37 - 1], 0)
+
+```
+\newpage
+
+##Question 2:
+###(a)
+```{r}
+x <- rnorm(n = 500, mean = 36, sd = 8)
+hist(x,freq = FALSE, breaks = 10, col = "skyblue", border = "black", 
+     main = "Histogram of Random Sample", xlab = "Values", ylab = "Frequency" )
+```
+
+##(b)
+```{r}
+x <- rnorm(n = 500, mean = 36, sd = 8)
+hist(x,freq = FALSE, breaks = 10, col = "skyblue", border = "black", 
+     main = "Histogram of Random Sample", xlab = "Values", ylab = "Frequency" )
+curve(dnorm(x,mean(x),sd(x)),add = TRUE, col = "red", lwd = 2)
+```
+
+##(c)
+##So in this the histogram hasn't shiftted a lot to one side that means not hard to left or right but it is in the middle and also the density curve is in the middle. 
+
+\newpage
+
+##Question 3:
+###(a)
+```{r}
+library(ggplot2)
+
+data <- data.frame(
+  X = c(2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6),
+  Y = c(6, 7.25, 8, 9.0625, 10, 11.0625, 12.25, 13.5625, 15)
+)
+
+ggplot(data, aes(x = Y, y = X)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Plot of Y versus X",
+       x = "Y",
+       y = "X")
+```
+
+##(b)
+```{r}
+library(ggplot2)
+
+data <- data.frame(
+  X = c(2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6),
+  Y = c(6, 7.25, 8, 9.0625, 10, 11.0625, 12.25, 13.5625, 15)
+)
+
+correlation_coefficient <- cor(data$Y, data$X)
+
+print(paste("Correlation coefficient (r):", correlation_coefficient))
+```
+
+##(c)
+###The Correlation coefficient value is 0.997 so that means it is close to 1. In this case it is a strong correlationa and also the values are more accurate that is why it is getting a answer which is close to 1.
+
+
+##(d)
+```{r}
+last_six_data <- tail(data, 6)
+
+correlation_coefficient_last_six <- cor(last_six_data$Y, last_six_data$X)
+
+print(paste("Correlation coefficient (R_x,y) for the last six pairs of data:", correlation_coefficient_last_six))
+
+correlation_coefficient_all <- cor(data$Y, data$X)
+
+print(paste("Correlation coefficient (R_x,y) for all data points:", correlation_coefficient_all))
+```
+###So the value has changed a bit after the 5th decimal point. But yet the correlation is strong as it is very much close to 1.
+
+
+##(e)
+```{r}
+data$X1 <- 2 * data$X - 1
+data$X2 <- data$X^2
+
+cor_xy <- cor(data$Y, data$X)
+cor_x1y <- cor(data$Y, data$X1)
+cor_x2y <- cor(data$Y, data$X2)
+
+print(paste("Correlation coefficient (r_x,y):", cor_xy))
+print(paste("Correlation coefficient (r_x1,y):", cor_x1y))
+print(paste("Correlation coefficient (r_x2,y):", cor_x2y))
+```
+##The (r_x,y) = (r_x1,y) as they borth holds the same value but yet the other answer (r_x2,y) is way more different that the answer what we are getting before.
+
+
+\newpage
+
+##Question 4:
+###(a)
+```{r}
+data(mtcars)
+
+head(mtcars, 10)
+```
+
+##(b)
+```{r}
+data(mtcars)
+
+summary(mtcars$mpg)
+summary(mtcars$hp)
+```
+
+##(c)
+```{r}
+data(mtcars)
+
+plot(mtcars$mpg, mtcars$hp, 
+     xlab = "Miles Per Gallon (mpg)", 
+     ylab = "Horsepower (hp)",
+     main = "Scatter Plot of mpg vs hp")
+```
+
+##(d)
+```{r}
+data(mtcars)
+
+model <- lm(mpg ~ hp, data = mtcars)
+
+summary(model)
+
+fitted_values <- predict(model)
+
+plot(mtcars$hp, mtcars$mpg, 
+     xlab = "Horsepower (hp)", 
+     ylab = "Miles Per Gallon (mpg)",
+     main = "Linear Regression: mpg vs hp")
+
+abline(model, col = "red")
+
+legend("topright", legend = paste("Regression Line: ", round(coef(model)[1], 2), " + ", round(coef(model)[2], 2), " * hp"),
+       col = "red", lty = 1)
+```
+
+##(e)
+```{r}
+data(mtcars)
+
+model <- lm(mpg ~ hp, data = mtcars)
+
+intercept <- coef(model)[1]
+slope <- coef(model)[2]
+
+fitted_equation <- paste("mpg =", round(intercept, 2), "+", round(slope, 2), "* hp")
+
+cat("Fitted Equation:", fitted_equation, "\n")
+
+change_in_mpg <- slope
+cat("Change in mpg when hp increases by one unit:", round(change_in_mpg, 2), "units\n")
+```
+
+##(f)
+```{r}
+data(mtcars)
+
+model <- lm(mpg ~ hp, data = mtcars)
+
+plot(mtcars$hp, resid(model), 
+     xlab = "Horsepower (hp)", 
+     ylab = "Residuals",
+     main = "Residual Plot: Residuals vs. Horsepower")
+
+abline(model, col = "red")
+```
+
+##(g)
+```{r}
+data(mtcars)
+
+model <- lm(mpg ~ hp, data = mtcars)
+
+hp_value <- 110
+predicted_mpg <- predict(model, newdata = data.frame(hp = hp_value))
+
+cat("Predicted mpg for a car with horsepower of 110:", predicted_mpg, "\n")
+```
+
+
+\newpage
+
+##Question 5:
+###Part-A
+###(a)
+```{r}
+mean <- 5.50
+standard_deviation <- 1.20
+
+percentile_90 <- qnorm(0.90, mean, standard_deviation)
+
+print(percentile_90)
+```
+
+##(b)
+```{r}
+mean <- 5.50
+standard_deviation <- 1.20
+
+percentile_25 <- qnorm(0.25, mean, standard_deviation)
+
+print(percentile_25)
+```
+
+##(c)
+```{r}
+mean <- 5.50
+
+median_value <- mean
+
+print(median_value)
+```
+
+##(d)
+```{r}
+mean <- 5.50
+standard_deviation <- 1.20
+threshold <- 7.00
+
+cumulative_probability_up_to_7 <- pnorm(threshold, mean, standard_deviation)
+
+percentage_more_than_7 <- 1 - cumulative_probability_up_to_7
+
+percentage_more_than_7 <- percentage_more_than_7 * 100
+
+print(percentage_more_than_7)
+```
+
+
+\newpage
+
+##Question 5:
+###Part-b
+###(a)
+###Binomial Distribution
+###n = 50, p = 0.05
+
+##(b)
+```{r}
+size <- 50
+prob <- 0.05
+q <- 2
+
+prob_fewer_than_3 <- pbinom(q, size, prob)
+
+print(prob_fewer_than_3)
+```
+
+##(c)
+```{r}
+mean_X <- 50 * 0.05
+var_X <- 50 * 0.05 * (1 - 0.05)
+
+cat("Mean of X:", mean_X, "\n")
+cat("Variance of X:", var_X, "\n")
+```
+
+##(d)
+###Binomial distribution. Because still theere are only two options in infected part. Also the sample sized is only fixed n=200, p=0.02
+
+
+
+\newpage
+
+##Question 6:
+###(a)
+```{r}
+N <- 20000
+my_boootstrap <- numeric(N)
+exam_scores <- c(82, 88, 75, 94, 90, 85, 78, 91, 86, 89, 92, 80, 87, 79, 84, 77, 83, 81, 76, 93, 88, 85, 89, 90, 82, 86, 75, 91, 79, 84, 78, 95, 88, 87, 93, 86, 82, 89, 90, 80)
+
+mean(exam_scores)
+```
+
+###(b)
+```{r}
+N <- 20000
+my_boootstrap <- numeric(N)
+exam_scores <- c(82, 88, 75, 94, 90, 85, 78, 91, 86, 89, 92, 80, 87, 79, 84, 77, 83, 81, 76, 93, 88, 85, 89, 90, 82, 86, 75, 91, 79, 84, 78, 95, 88, 87, 93, 86, 82, 89, 90, 80)
+
+mean(exam_scores)
+
+for (i in 1:N) {
+  s=sample(exam_scores,10,replace = T)
+  my_boootstrap[i]=mean(s)
+}
+
+hist(my_boootstrap, main = "Sampling Distribution of Sample Mean", xlab = "Sample Mean", ylab = "Frequency", col = "skyblue", border = "white")
+```
+
+##(c)
+```{r}
+quantile (my_boootstrap, c(0.90))
+```
+
+##(d)
+```{r}
+qqnorm(my_boootstrap)
+qqline(my_boootstrap)
+```
